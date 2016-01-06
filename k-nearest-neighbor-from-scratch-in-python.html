@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>MLPython</title>
+
+
+        <!-- Bootstrap Core CSS -->
+        <link href="/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- Custom Fonts -->
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+
+
+			<meta property="og:locale" content="en">
+		<meta property="og:site_name" content="MLPython">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/k-nearest-neighbor-from-scratch-in-python.html">
+	<meta property="og:title" content="K Nearest Neighbor from Scratch in Python">
+	<meta property="og:description" content="">
+	<meta property="og:image" content="//theme/images/ouro-preto.jpg">
+	<meta property="article:published_time" content="2016-01-06 00:00:00+09:00">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">MLPython</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('/theme/images/ouro-preto.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>K Nearest Neighbor from Scratch in Python</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/kenzo-takahashi.html">Kenzo Takahashi</a>
+                             on Wed 06 January 2016
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <!-- Post Content -->
+    <article>
+        <p>We are going to implement K-nearest neighbor(or k-NN for short) classifier from scratch in Python. k-NN is probably the easiest-to-implement ML algorithm. Besides, unlike other algorithms(e.g. Neural Network, Support Vector Machine), you do not need to know much math to understand it. </p>
+<p>For this tutorial, I assume you know the followings:</p>
+<ul>
+<li>Python(list comprehension, basic OOP)</li>
+<li>Numpy</li>
+<li>Basic Linear Algebra</li>
+<li>Basic machine learning concept</li>
+</ul>
+<hr />
+<h2>Part 1: How k-NN Works</h2>
+<p>I will explain k-NN, but this is by no means a thorough introduction to the subject. It would be better if you already know how it works and just wants to implement it.</p>
+<h3>The Big Picture</h3>
+<p>The idea of k-NN is pretty intuitive: If you want to know the class of a sample, look at its neighbors.</p>
+<p>Let me give you an example. We are going to use the famous Iris flower data set for this tutorial. It has 4 features (Sepal length, Sepal width, Petal length, Petal width) and 3 classes(Setosa, Virginica, Versicolor). You want to predict the class of a flower(flower A) based on the 4 features. If a similar flower(flower B) is labeled as Setosa, it's quite likely that flower A is also Setosa. By similar, I mean they both have similar sepal length, sepal width, and so on. Flower A's most similar flower is called the <em>nearest neighbor</em>.</p>
+<p>You can conclude flower A's class just by looking at its most similar flower(the nearest neighbor), but you can also look a little further and decide the class based on the 3, 5, or K nearest neighbors. If K is larger than 1, you simply take the majority. That's why K is usually an odd number in order to prevent tie.</p>
+<h3>Scikit-learn Style</h3>
+<p>My implementation of k-NN closely follows the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier">scikit-learn style</a>. scikit-learn is the most widely used ML library for python. The nice thing about scikit-learn is its consistent API. It makes the design of your algorithm really easy. Take a look at the toy example.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">neighbor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[0,1]
+</pre></div>
+
+
+<p>Scikit-learn calls ML algorithms <em>estimators</em>. Every estimator is a class. You first initialize the class with parameters specific to that estimator. Then you call the <code>fit</code> method with a set of samples(<code>X_train</code>) and target classes(<code>y_train</code>). As you can see, <code>X_train</code> is a 2D array, or matrix. In this example, we have 6 samples, each of which consist of 2 features. <code>y_train</code> is an array of target class corresponding to <code>X_train</code>. You might be wondering why X is in uppercase and y is in lowercase. In Linear Algebra, we usually denote matrices by uppercase letters and vectors by lowercase letters, so it's good to stick to the convention. Then you call the <code>predict</code> method with a test set(<code>X_test</code>). The output is a list of predicted classes.</p>
+<h3>Calculating k-NN by Hand</h3>
+<p>Let's calculate k-NN by hand using the above example. In my experience, hand calculation really helps me understand the algorithm. Unlike most algorithms, k-NN does nothing at <code>fit</code>. All the work happens at <code>predict</code>. The first test sample is [1,0]. To measure the similarity, we simply calculate the difference for each feature and add them up. This is called <em>Manhattan distance</em>. The Manhattan distance between vector <span class="math">\(p\)</span> and <span class="math">\(q\)</span> can be written as follows:</p>
+<div class="math">$$d(p, q) = \displaystyle\sum_{i=1}^{n} |p_i - q_i|$$</div>
+<p>The first training sample is [-1, -1]. So the Manhattan distance is</p>
+<div class="math">$$|-1 - 1| + |-1 - 0| = 2 + 1 = 3$$</div>
+<p>Notice the absolute value notation. If you don't take the absolute value, positive value and negative value cancel out.</p>
+<p>Similarly, the Manhattan distances of the rest of the training data are 4, 6, 1, 2, 4, respectively. K = 3 in this example, so we pick the 3 nearest neighbors. The smallest value means the nearest, so the nearest neighbor is [1,1] with distance = 1. Its corresponding class is 0. The second and third nearest neighbors are [2,1], [-1,-1], whose classes are 0, 1. We have two 0's and one 1 so the prediction is 0.</p>
+<hr />
+<h2>Part 2: A Simple k-NN</h2>
+<p>Now that you understand the algorithm, it's time to write some code! I'm using python3. If you want to use python2, add this line at the beginning of your file and everything will work fine.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+</pre></div>
+
+
+<h3>The Initial Code</h3>
+<p><code>__init__</code>, <code>fit</code>, <code>predict</code> are pretty easy, so we start with them.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">KNeighborsClassifier</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+</pre></div>
+
+
+<p>For now, <code>__init__</code> takes one parameter, n_neighbors. We just save it to the instance variable.
+As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just save X and y to the instance variables for later use. <code>predict</code> in scikit-learn predicts not just 1 instance, but multiple instances. So we have <code>_predict_one</code> for predicting 1 instance. <code>predict</code> calls <code>_predict_one</code> for each instance and put them in a list. By the way, I am using the term <em>data</em>, <em>sample</em>, and <em>instance</em> loosely. They pretty much mean the same thing here. For now, <code>_predict_one</code> always returns 1, but let's test the code.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+<span class="n">neighbor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]])))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[1,1]
+</pre></div>
+
+
+<p>It is quite common to initialize the class and fit in 1 line.</p>
+<div class="highlight"><pre><span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now let's work on <code>_predict_one</code>.</p>
+<h3>Manhattan Distance</h3>
+<h4>Exercise 1</h4>
+<p>The first thing you have to do is calculate distance. The method <code>_distance</code> takes two numpy arrays <code>data1</code>, <code>data2</code>, and returns the Manhattan distance between the two. This shouldn't be that hard, so I want you to write it by yourself. Dont' worry, I will show you my solution in a moment. <em>Hint</em>: This can be done in 1 line of code:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns Manhattan distance&quot;&quot;&quot;</span>
+    <span class="c"># Your code here</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>Your code should print 3.</p>
+<h4>Solution</h4>
+<p>Here is my solution:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Here, I'm taking advantage of numpy array to use element-wise operations(<code>-</code> and <code>abs</code>). If you gave lists instead, you would get TypeError:</p>
+<div class="highlight"><pre><span class="n">TypeError</span><span class="o">:</span> <span class="n">unsupported</span> <span class="n">operand</span> <span class="n">type</span><span class="o">(</span><span class="n">s</span><span class="o">)</span> <span class="k">for</span> <span class="o">-:</span> <span class="s1">&#39;list&#39;</span> <span class="n">and</span> <span class="s1">&#39;list&#39;</span>
+</pre></div>
+
+
+<p>By the way, Scikit-learn accepts any array-like objects in <code>fit</code> and <code>predict</code>, so it could be a list, or it could be a numpy array. But it converts it to numpy array under the hood because it makes calculation simpler. On the other hand, my code only accepts numpy array because I don't want to make it complicated. If you are going to use it just for yourself, it shouldn't be a big deal.</p>
+<h3>Getting K nearest neighbors</h3>
+<p>Now that you have distance, we can get K nearest neighbors. To do that, first we naively sort the samples. If you have 1000 examples and just want get, say, 3 smallest values, it is unnecessary to sort them all. But our goal is to understand how k-NN works, not write efficient code:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">distances</span>
+</pre></div>
+
+
+<p>It's important to sort a pair of distance and a target class. Otherwise you won't be able to find a corresponding class value. When sorting tuples or lists instead of numbers, <code>sorted</code> function sorts by the first element. The first element of our tuple is distance, so we are good. I'm breaking <code>_predict_one</code> method temporarily; it no longer returns a number. But that's OK. Let's test it:</p>
+<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[(1, 0), (2, 0), (3, 1), (4, 0), (4, 1), (6, 1)]
+</pre></div>
+
+
+<p>It works! It matches what we calculated by hand earlier.</p>
+<p>As a side note, when applying a function to a list/dictionary comprehension, you don't need square brackets or curly braces. Using them would make it ugly and hard to read:</p>
+<div class="highlight"><pre><span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)])</span>
+</pre></div>
+
+
+<p>Once we sorted the distances, we can take the first k elements:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">neighbors</span>
+</pre></div>
+
+
+<h3>Uniform Weights</h3>
+<h4>Exercise 2</h4>
+<p>After we take the k nearest neighbors, we no longer care about their distance. What we care is how many of them belong to each class. So <code>_compute_weights</code> method changes distances to 1. This is fairly straightforward. Again, this can be done is 1 line of code:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;computes uniform weights&quot;&quot;&quot;</span>
+    <span class="c"># Your code here</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[(1, 0), (1, 0), (1, 1)]
+</pre></div>
+
+
+<h4>Solution</h4>
+<p>Here is my solution:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Now we call the method with <code>neighbors</code> as the argument:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weights</span>
+</pre></div>
+
+
+<p>You can shorten the code a little bit as long as it's readable:</p>
+<div class="highlight"><pre><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+</pre></div>
+
+
+<h3>Predicting 1 Instance</h3>
+<p>At this point, our k-NN class looks like this:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">KNeighborsClassifier</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">weights</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+</pre></div>
+
+
+<p>We need to group the weights by class so that we can count them. To do that, we can use <em>defaultdict</em>:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+    <span class="n">weights_by_class</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="n">weights_by_class</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weights_by_class</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>defaultdict(&lt;class &#39;list&#39;&gt;, {0: [1, 1, 1], 1: [1, 1]})
+</pre></div>
+
+
+<h4>Exercise 3</h4>
+<p>We are almost done. Given the <code>weights_by_class</code>, we can predict the class. As always, this can be done in 1 line. The toy example we've been using is binary classification, but your code should also work with multiclass classification:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+    <span class="n">weights_by_class</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+        <span class="n">weights_by_class</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="c"># Your code here</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>This should print 0</p>
+<h4>Solution</h4>
+<p>Here is mine:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="nb">max</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">weights_by_class</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+
+<p>There is quite a lot going on in this line. Some people might prefer to break it down to multiple lines, which is totally fine(In fact, I often write code like this and make it shorter later):</p>
+<div class="highlight"><pre><span class="n">counts</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">sum</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">weights_by_class</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="n">majority</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">majority</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+
+<p>First we count how many neighbors belong to each class using <code>sum</code>, then take the majority with <code>max</code>. Just like <code>sorted</code>, when dealing with tuples, <code>max</code> looks at the first element by default. Finally, you take the second element of the tuple, which is the predicted class.</p>
+<p>That's it!</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">class</span> <span class="nc">KNeighborsClassifier</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+        <span class="n">weights_by_class</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+            <span class="n">weights_by_class</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">weights_by_class</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Let's test it.</p>
+<div class="highlight"><pre><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">neighbor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+
+<p>The output looks as you expect:</p>
+<div class="highlight"><pre>[0,1]
+</pre></div>
+
+
+<hr />
+<h2>Part 3: Some Improvements</h2>
+<p>If you look at the scikit-learn documentation, you see that KNeighborsClassifier takes a lot of parameters and has many more methods. </p>
+<h3>Distance-Weighted k-NN</h3>
+<p>The way we pick a winner from k nearest neighbors is simply take the majority. But what happens in this case?</p>
+<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>According to our code, it will produce 0 because we have 2 neighbors of class 0 whereas we have only 1 neighbor of class 1. But those two neighbors of class 0 are further away. Intuitively, 1 is more likely to be correct in this case. So we would like to take the distances into account, giving closer points more weight. To do that, we take the inverse of a distance(<span class="math">\(1/d\)</span>). There is also <span class="math">\(1/(d^2)\)</span>, which implies that further points matter even less than just the inverse, which makes the choice of K matters less. I don't know which one is better, but scikit-learn chooses the former, so I will stick to that.</p>
+<p>First we need to add a new parameter, <code>weights</code>. The default is uniform.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s">&#39;uniform&#39;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+</pre></div>
+
+
+<h4>Exercise 4</h4>
+<p>Let's make some change to <code>_compute_weights</code>. I only left the main part for the exercise. </p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;uniform&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;distance&#39;</span><span class="p">:</span>
+        <span class="c"># Your code here</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;weights not recognized: should be &#39;uniform&#39; or &#39;distance&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[(1.0, 0), (0.5, 0), (0.3333333333333333, 1)]
+</pre></div>
+
+
+<h4>Solution</h4>
+<p>This should be fairly straightforward:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="o">/</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+</pre></div>
+
+
+<p>Now this is classified as 1 instead of 0:</p>
+<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s">&#39;distance&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>There is one problem though. What happens if some distance is 0? You will get division by 0 error. Distance = 0 means two samples have exactly the same value on every feature. This might happen sometimes, especially if the sample size is big. Or, if you <code>fit</code> and <code>predict</code> with the same X to measure the training set accuracy, you will definitely get the error on every single instance(If you don't know why, pause and think about it).</p>
+<p>So when at least one distance is 0, we will forget about weighted distance and assign 1 to distance = 0 and 0 to everything else. In other words, we compute uniform weights on those samples whose distance is 0.</p>
+<h4>Exercise 5</h4>
+<p>Let's implement the improved version of <code>_compute_weights</code>:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;uniform&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;distance&#39;</span><span class="p">:</span>
+        <span class="c"># Your code here</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;weights not recognized: should be &#39;uniform&#39; or &#39;distance&#39;&quot;</span><span class="p">)</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s">&#39;distance&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]))</span>
+</pre></div>
+
+
+<p>Output:</p>
+<div class="highlight"><pre>[(1, 1), (1, 1), (1, 0)]
+</pre></div>
+
+
+<h4>Solution</h4>
+<p>Here is mine:</p>
+<div class="highlight"><pre><span class="n">matches</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">return</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="p">[(</span><span class="mi">1</span><span class="o">/</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+</pre></div>
+
+
+<p>First it collects all the samples whose distance is 0 and assigns 1. If the <code>matches</code> contains something, it returns it. Otherwise, it just returns what we had previously.</p>
+<h3>Euclidean Distance</h3>
+<p>We used Manhattan distance to calculate the distance between the two points. Another popular distance is <em>Euclidean Distance</em>. To calculate it, we square the difference for each feature, add them up, and take the square root of it.</p>
+<div class="math">$$d(p, q) = \sqrt{\displaystyle\sum_{i=1}^{n} (p_i - q_i)^2}$$</div>
+<p>Let's add Euclidean distance to our code. The first thing we need to do is add a new parameter <code>p</code> to <code>__init__</code>:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+</pre></div>
+
+
+<p>When p = 1, Manhattan distance is used, and when p = 2, Euclidean distance. The default is 2. You might think why we use numbers instead of something like 'manhattan' and 'euclidean' as we did on weights. The reason for this is that Manhattan distance and Euclidean distance are the special case of <em>Minkowski distance</em>. For arbitrary p, Minkowski distance is used in scikit-learn. It's beyond the scope of this tutorial, and we are going to only consider p = 1 or 2.</p>
+<h4>Exercise 6</h4>
+<p>Just like Manhattan distance, if you follow the formula, you will be fine. <em>Hint</em>: <code>sqrt</code> in math module does not work on numpy array. You can use numpy's own <code>sqrt</code> instead.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;1: Manhattan, 2: Euclidean&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">))</span>          
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c"># Your code here</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;p not recognized: should be 1 or 2&quot;</span><span class="p">)</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])))</span>
+</pre></div>
+
+
+<p>The output should be <span class="math">\(2.2360679775\)</span>, which is <span class="math">\(\sqrt{5}\)</span></p>
+<h4>Solution</h4>
+<p>Again, we can take advantage of numpy array:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+
+<p>So the natural question is, which one is better, Manhattan or Euclidean? I wish I knew the answer. I couldn't find any explanation for that. But I do have some idea. Let's say we have 2 people, person A and person B. Here is case 1:</p>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Case 1</th>
+    <th>height</th>
+    <th>weight</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>person A</td>
+    <td>2</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>person B</td>
+    <td>2</td>
+    <td>4</td>
+  </tr>
+  </tbody>
+</table>
+
+<p>Ignore the absolute values and pay attention to the ratio. This roughly means person A is thin compared to person B. Here is case 2:</p>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Case 2</th>
+    <th>height</th>
+    <th>weight</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>person A</td>
+    <td>2</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>person B</td>
+    <td>3</td>
+    <td>3</td>
+  </tr>
+  </tbody>
+</table>
+
+<p>One way to look at it is that person A is a child and person B is an adult.</p>
+<p>In both case 1 and 2, the Manhattan distance is <span class="math">\(2\)</span>. On the other hand, the Euclidean distance in case 1 is <span class="math">\( \sqrt{0^2 + 2^2}= 2\)</span>, but in case 2, it's <span class="math">\(\sqrt{1^2 + 1^2} = \sqrt{2} &lt; 2\)</span>. This means person A and B in case 2 are more similar than person A and B in case 1. So if ratio like obesity is important, Euclidean distance will be the better choice.</p>
+<h3>Score method</h3>
+<h4>Exercise 7</h4>
+<p>We have one more method to write which is <code>score</code>. It's just the mean accuracy of the given test data. It calls <code>predict</code>, compares the output to y, and returns what fraction of them got right:  </p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c"># Your code here</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+</pre></div>
+
+
+<p>The output should be 0.5</p>
+<h4>Solution</h4>
+<p>This should be self-explanatory:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">t</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now we have the improved version of k-NN.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">class</span> <span class="nc">KNeighborsClassifier</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s">&#39;uniform&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">n_neighbors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;1: Manhattan, 2: Euclidean&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">))</span>          
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">data1</span> <span class="o">-</span> <span class="n">data2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;p not recognized: should be 1 or 2&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;uniform&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">==</span> <span class="s">&#39;distance&#39;</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">matches</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="p">[(</span><span class="mi">1</span><span class="o">/</span><span class="n">d</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;weights not recognized: should be &#39;uniform&#39; or &#39;distance&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_weights</span><span class="p">(</span><span class="n">distances</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_neighbors</span><span class="p">])</span>
+        <span class="n">weights_by_class</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">:</span>
+            <span class="n">weights_by_class</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">weights_by_class</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">t</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">y</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Iris Flower dataset</h3>
+<p>Let's try our k-NN on a more realistic example. You can import a handful of classic datasets directly from scikit-learn's datasets module. We are going to use the iris flower dataset.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_temp</span> <span class="o">=</span> \
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=.</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">X_validation</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_validation</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> \
+    <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">neighbor</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_validation</span><span class="p">,</span> <span class="n">y_validation</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Using <code>train_test_split</code> function from cross_validation module, it first splits the data in the ratio 60:40, then splits the latter in half. Now we have 60% for the training set, 20% for the validation and test set.</p>
+<p>Next it initializes k-NN with no special configuration and fits it. Finally, it prints the training set accuracy and the validation set accuracy to see if the model is overfitting. Since the validation set contains only 30 samples, the result varies a lot. Sometimes I got 100% and sometimes 90%. The most common one seems to be .967, meaning it got only one sample wrong. I've tried the various combinations of the 3 parameters, but the default setting is hard to beat in this dataset. </p>
+<p>Once you find the good parameters, you can get the true score on the test set.</p>
+<div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+</pre></div>
+
+
+<p>I encourage you to play with the code and see how changing each parameter affects the accuracy.</p>
+<h3>Conclusion</h3>
+<p>If you have questions or comments, tweet <a href="https://twitter.com/kenzotakahashi"><strong>@kenzotakahashi</strong></a> and I'll be happy to help.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </article>
+
+    <hr>
+
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="https://twitter.com/kenzotakahashi">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/kenzotakahashi">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright © MLPython 2015</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="/theme/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="/theme/js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
