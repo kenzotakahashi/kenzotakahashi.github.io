@@ -116,6 +116,7 @@
 <p>The idea of k-NN is pretty intuitive: If you want to know the class of a sample, look at its neighbors.</p>
 <p>Let me give you an example. We are going to use the famous Iris flower data set for this tutorial. It has 4 features (Sepal length, Sepal width, Petal length, Petal width) and 3 classes(Setosa, Virginica, Versicolor). You want to predict the class of a flower(flower A) based on the 4 features. If a similar flower(flower B) is labeled as Setosa, it's quite likely that flower A is also Setosa. By similar, I mean they both have similar sepal length, sepal width, and so on. Flower A's most similar flower is called the <em>nearest neighbor</em>.</p>
 <p>You can conclude flower A's class just by looking at its most similar flower(the nearest neighbor), but you can also look a little further and decide the class based on the 3, 5, or K nearest neighbors. If K is larger than 1, you simply take the majority. That's why K is usually an odd number in order to prevent tie.</p>
+<hr />
 <h3>Scikit-learn Style</h3>
 <p>My implementation of k-NN closely follows the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html#sklearn.neighbors.KNeighborsClassifier">scikit-learn style</a>. scikit-learn is the most widely used ML library for python. The nice thing about scikit-learn is its consistent API. It makes the design of your algorithm really easy. Take a look at the toy example.</p>
 <div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsClassifier</span>
@@ -135,6 +136,7 @@
 
 
 <p>Scikit-learn calls ML algorithms <em>estimators</em>. Every estimator is a class. You first initialize the class with parameters specific to that estimator. Then you call the <code>fit</code> method with a set of samples(<code>X_train</code>) and target classes(<code>y_train</code>). As you can see, <code>X_train</code> is a 2D array, or matrix. In this example, we have 6 samples, each of which consist of 2 features. <code>y_train</code> is an array of target class corresponding to <code>X_train</code>. You might be wondering why X is in uppercase and y is in lowercase. In Linear Algebra, we usually denote matrices by uppercase letters and vectors by lowercase letters, so it's good to stick to the convention. Then you call the <code>predict</code> method with a test set(<code>X_test</code>). The output is a list of predicted classes.</p>
+<hr />
 <h3>Calculating k-NN by Hand</h3>
 <p>Let's calculate k-NN by hand using the above example. In my experience, hand calculation really helps me understand the algorithm. Unlike most algorithms, k-NN does nothing at <code>fit</code>. All the work happens at <code>predict</code>. The first test sample is [1,0]. To measure the similarity, we simply calculate the difference for each feature and add them up. This is called <em>Manhattan distance</em>. The Manhattan distance between vector <span class="math">\(p\)</span> and <span class="math">\(q\)</span> can be written as follows:</p>
 <div class="math">$$d(p, q) = \displaystyle\sum_{i=1}^{n} |p_i - q_i|$$</div>
@@ -190,6 +192,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 
 <p>Now let's work on <code>_predict_one</code>.</p>
+<hr />
 <h3>Manhattan Distance</h3>
 <h4>Exercise 1</h4>
 <p>The first thing you have to do is calculate distance. The method <code>_distance</code> takes two numpy arrays <code>data1</code>, <code>data2</code>, and returns the Manhattan distance between the two. This shouldn't be that hard, so I want you to write it by yourself. Dont' worry, I will show you my solution in a moment. <em>Hint</em>: This can be done in 1 line of code:</p>
@@ -216,6 +219,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 
 <p>By the way, Scikit-learn accepts any array-like objects in <code>fit</code> and <code>predict</code>, so it could be a list, or it could be a numpy array. But it converts it to numpy array under the hood because it makes calculation simpler. On the other hand, my code only accepts numpy array because I don't want to make it complicated. If you are going to use it just for yourself, it shouldn't be a big deal.</p>
+<hr />
 <h3>Getting K nearest neighbors</h3>
 <p>Now that you have distance, we can get K nearest neighbors. To do that, first we naively sort the samples. If you have 1000 examples and just want get, say, 3 smallest values, it is unnecessary to sort them all. But our goal is to understand how k-NN works, not write efficient code:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="p">):</span>
@@ -251,6 +255,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 </pre></div>
 
 
+<hr />
 <h3>Uniform Weights</h3>
 <h4>Exercise 2</h4>
 <p>After we take the k nearest neighbors, we no longer care about their distance. What we care is how many of them belong to each class. So <code>_compute_weights</code> method changes distances to 1. This is fairly straightforward. Again, this can be done is 1 line of code:</p>
@@ -289,6 +294,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 </pre></div>
 
 
+<hr />
 <h3>Predicting 1 Instance</h3>
 <p>At this point, our k-NN class looks like this:</p>
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -502,6 +508,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 
 <p>First it collects all the samples whose distance is 0 and assigns 1. If the <code>matches</code> contains something, it returns it. Otherwise, it just returns what we had previously.</p>
+<hr />
 <h3>Euclidean Distance</h3>
 <p>We used Manhattan distance to calculate the distance between the two points. Another popular distance is <em>Euclidean Distance</em>. To calculate it, we square the difference for each feature, add them up, and take the square root of it.</p>
 <div class="math">$$d(p, q) = \sqrt{\displaystyle\sum_{i=1}^{n} (p_i - q_i)^2}$$</div>
@@ -536,54 +543,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 </pre></div>
 
 
-<p>So the natural question is, which one is better, Manhattan or Euclidean? I wish I knew the answer. I couldn't find any explanation for that. But I do have some idea. Let's say we have 2 people, person A and person B. Here is case 1:</p>
-<table class="table">
-  <thead>
-  <tr>
-    <th>Case 1</th>
-    <th>height</th>
-    <th>weight</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>person A</td>
-    <td>2</td>
-    <td>2</td>
-  </tr>
-  <tr>
-    <td>person B</td>
-    <td>2</td>
-    <td>4</td>
-  </tr>
-  </tbody>
-</table>
-
-<p>Ignore the absolute values and pay attention to the ratio. This roughly means person A is thin compared to person B. Here is case 2:</p>
-<table class="table">
-  <thead>
-  <tr>
-    <th>Case 2</th>
-    <th>height</th>
-    <th>weight</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>person A</td>
-    <td>2</td>
-    <td>2</td>
-  </tr>
-  <tr>
-    <td>person B</td>
-    <td>3</td>
-    <td>3</td>
-  </tr>
-  </tbody>
-</table>
-
-<p>One way to look at it is that person A is a child and person B is an adult.</p>
-<p>In both case 1 and 2, the Manhattan distance is <span class="math">\(2\)</span>. On the other hand, the Euclidean distance in case 1 is <span class="math">\( \sqrt{0^2 + 2^2}= 2\)</span>, but in case 2, it's <span class="math">\(\sqrt{1^2 + 1^2} = \sqrt{2} &lt; 2\)</span>. This means person A and B in case 2 are more similar than person A and B in case 1. So if ratio like obesity is important, Euclidean distance will be the better choice.</p>
+<hr />
 <h3>Score method</h3>
 <h4>Exercise 7</h4>
 <p>We have one more method to write which is <code>score</code>. It's just the mean accuracy of the given test data. It calls <code>predict</code>, compares the output to y, and returns what fraction of them got right:  </p>
@@ -653,6 +613,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 </pre></div>
 
 
+<hr />
 <h3>Iris Flower dataset</h3>
 <p>Let's try our k-NN on a more realistic example. You can import a handful of classic datasets directly from scikit-learn's datasets module. We are going to use the iris flower dataset.</p>
 <div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
@@ -680,6 +641,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 
 <p>I encourage you to play with the code and see how changing each parameter affects the accuracy.</p>
+<hr />
 <h3>Conclusion</h3>
 <p>If you have questions or comments, tweet <a href="https://twitter.com/kenzotakahashi"><strong>@kenzotakahashi</strong></a> and I'll be happy to help.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
