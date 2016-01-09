@@ -195,7 +195,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 <hr />
 <h3>Manhattan Distance</h3>
 <h4>Exercise 1</h4>
-<p>The first thing you have to do is calculate distance. The method <code>_distance</code> takes two numpy arrays <code>data1</code>, <code>data2</code>, and returns the Manhattan distance between the two. This shouldn't be that hard, so I want you to write it by yourself. Dont' worry, I will show you my solution in a moment. <em>Hint</em>: This can be done in 1 line of code:</p>
+<p>The first thing you have to do is calculate distance. The method <code>_distance</code> takes two numpy arrays <code>data1</code>, <code>data2</code>, and returns the Manhattan distance between the two. This shouldn't be that hard, so I want you to write it by yourself. Dont' worry, I will show you my solution in a moment. <em>Hint:</em> This can be done in 1 line of code:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;returns Manhattan distance&quot;&quot;&quot;</span>
     <span class="c"># Your code here</span>
@@ -522,7 +522,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 <p>When p = 1, Manhattan distance is used, and when p = 2, Euclidean distance. The default is 2. You might think why we use numbers instead of something like 'manhattan' and 'euclidean' as we did on weights. The reason for this is that Manhattan distance and Euclidean distance are the special case of <em>Minkowski distance</em>. For arbitrary p, Minkowski distance is used in scikit-learn. It's beyond the scope of this tutorial, and we are going to only consider p = 1 or 2.</p>
 <h4>Exercise 6</h4>
-<p>Just like Manhattan distance, if you follow the formula, you will be fine. <em>Hint</em>: <code>sqrt</code> in math module does not work on numpy array. You can use numpy's own <code>sqrt</code> instead.</p>
+<p>Just like Manhattan distance, if you follow the formula, you will be fine. <em>Hint:</em> <code>sqrt</code> in math module does not work on numpy array. You can use numpy's own <code>sqrt</code> instead.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;1: Manhattan, 2: Euclidean&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -546,7 +546,7 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 <hr />
 <h3>Score method</h3>
 <h4>Exercise 7</h4>
-<p>We have one more method to write which is <code>score</code>. It's just the mean accuracy of the given test data. It calls <code>predict</code>, compares the output to y, and returns what fraction of them got right:  </p>
+<p>We have one more method to write which is <code>score</code>. It's just the mean accuracy of the given test data. It calls <code>predict</code>, compares the output to y, and returns what fraction of them got right. <em>Hint:</em> You don't need list comprehension for this:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="c"># Your code here</span>
 
@@ -561,8 +561,13 @@ As I said before, <code>fit</code> doesn't do anything in k-NN. Again, we just s
 
 <p>The output should be 0.5</p>
 <h4>Solution</h4>
-<p>This should be self-explanatory:</p>
+<p>Thr obvious solution is this:</p>
 <div class="highlight"><pre><span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<p>After I published this post, I realized that there is a much better way using the element-wise operation:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 
 
