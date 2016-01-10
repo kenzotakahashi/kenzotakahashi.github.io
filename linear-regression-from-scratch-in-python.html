@@ -46,8 +46,8 @@
 	<meta property="og:url" content="/linear-regression-from-scratch-in-python.html">
 	<meta property="og:title" content="Linear Regression from Scratch in Python">
 	<meta property="og:description" content="">
-	<meta property="og:image" content="//theme/images/sydney-harbour-bridge.jpg">
-	<meta property="article:published_time" content="2016-01-09 00:00:00+09:00">
+	<meta property="og:image" content="//theme/images/african-sunrise.jpg">
+	<meta property="article:published_time" content="2016-01-10 00:00:00+09:00">
 </head>
 
 <body>
@@ -78,7 +78,7 @@
     </nav>
 
     <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('/theme/images/sydney-harbour-bridge.jpg')">
+        <header class="intro-header" style="background-image: url('/theme/images/african-sunrise.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -86,7 +86,7 @@
                         <h1>Linear Regression from Scratch in Python</h1>
                         <span class="meta">Posted by
                                 <a href="/author/kenzo-takahashi.html">Kenzo Takahashi</a>
-                             on Sat 09 January 2016
+                             on Sun 10 January 2016
                         </span>
                         
                     </div>
@@ -101,24 +101,27 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <!-- Post Content -->
     <article>
-        <p>Linear Regression is the most basic regression algorithm.</p>
-<p>If you want to learn machine learning on <a href="https://www.coursera.org/learn/machine-learning">Andrew Ng's coursera course</a> but don't like Matlab/Octave, this post is for you. We are going to write 3 flavors of linear regression introduced in his course. <a href="http://cs229.stanford.edu/materials.html">The lecture notes 1</a> on Stanford website is also helpful.</p>
-<p>My code follows the convension of scikit-learn API.</p>
-<p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything will work fine.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-</pre></div>
-
-
+        <p>Linear Regression is the most basic regression algorithm, but the math behind it is not so simple. The concepts you learn in linear regression is the foundation of other algorithms such as logistic regression and neural network.</p>
+<p>If you are studying machine learning on <a href="https://www.coursera.org/learn/machine-learning">Andrew Ng's coursera course</a> but don't like Matlab/Octave, this post is for you. We are going to write 3 flavors of linear regression introduced in his course. <a href="http://cs229.stanford.edu/materials.html">The lecture notes 1</a> on Stanford website is also helpful.</p>
+<hr />
+<h3>Before We Get Started</h3>
 <p>For this tutorial, I assume you know the followings:</p>
 <ul>
 <li>Python(list comprehension, basic OOP)</li>
 <li>Numpy</li>
 <li>Basic Linear Algebra</li>
 <li>Multivariate Calculus(partial derivative)</li>
-<li>Basic machine learning concept</li>
+<li>Basic machine learning concepts</li>
 </ul>
+<p>My code follows the scikit-learn style. If you are unfamiliar with scikit-learn, I recommend you check out at the <a href="http://scikit-learn.org/stable/index.html">website</a>. I also briefly mention it in my post, <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>.</p>
+<p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything should work fine.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+</pre></div>
+
+
+<hr />
 <h3>Linear Regression with Gradient Descent</h3>
-<p>The first one is linear regression with gradient descent. Translating from math formula fo code can be tricky. Let's get to it. Gradient descent needs two parameters, <strong>learning rate</strong>(<code>eta</code>) and <strong>number of iteration</strong>(<code>n_iter</code>):</p>
+<p>The first one is linear regression with gradient descent. Gradient descent needs two parameters, learning rate(<code>eta</code>) and number of iteration(<code>n_iter</code>):</p>
 <div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">class</span> <span class="nc">LinearRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -128,10 +131,9 @@
 </pre></div>
 
 
-<p>Before we move on, I want to mention briefly mention how dot product works in numpy. Linear regression is full of linear</p>
 <p>We approximate a target value as a linear function of x:</p>
 <div class="math">$$h(x) = \theta_0 + \theta_1x_1 + \theta_2x_2 + \dots + \theta_nx_n$$</div>
-<p>where <span class="math">\(n\)</span> is the number of features. <span class="math">\(\theta\)</span> is a weight for each x. The equation can be expressed as a dot product. But we need <span class="math">\(x_0\)</span>, otherwise the length of <span class="math">\(x\)</span> and <span class="math">\(\theta\)</span> won't match. So we let <span class="math">\(x_0 = 1\)</span>(intercept term). Now we can use dot product: </p>
+<p>where <span class="math">\(n\)</span> is the number of features. <span class="math">\(\theta\)</span> is a weight for each <span class="math">\(x\)</span>. The equation can be expressed as a the dot product. But we need <span class="math">\(x_0\)</span>, otherwise the length of <span class="math">\(x\)</span> and <span class="math">\(\theta\)</span> won't match. So we let <span class="math">\(x_0 = 1\)</span>(intercept term). Now we can use the dot product: </p>
 <div class="math">$$h(x) =  \displaystyle\sum_{i=0}^{n} \theta_ix_i = \theta^Tx$$</div>
 <p>But <span class="math">\(x\)</span> is just one sample. We want to calculate all the samples(<span class="math">\(X\)</span>) simultaneously. <span class="math">\(X\)</span> is <span class="math">\(m \times n\)</span> where m is the number of samples, and <span class="math">\(\theta\)</span> is <span class="math">\(n \times 1\)</span>, so the formula becomes</p>
 <div class="math">$$h(X) = X\theta$$</div>
@@ -175,15 +177,17 @@
 
 <hr />
 <h4>Solution</h4>
-<p>Numpy offers two ways to do dot product: <code>a.dot(b)</code> or <code>numpy.dot(a, b)</code>. I like the former because it's cleaner:</p>
+<p>Numpy offers two ways to do the dot product: <code>a.dot(b)</code> or <code>numpy.dot(a, b)</code>. I like the former because it's cleaner:</p>
 <div class="highlight"><pre><span class="k">return</span> <span class="n">X</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
 </pre></div>
 
 
+<hr />
 <h3>Update Rule</h3>
-<p>Here is the update rule. Andrew Ng's notes and slides use summation, but you want to use dot product instead of for loop. So I converted it to the vectorized form for you:</p>
+<p>Here is the update rule. Andrew Ng's notes and slides use summation, but you want to use the dot product instead of for loop. So I converted it to the vectorized form for you:</p>
 <div class="math">$$\theta := \theta + \frac{\alpha}{m} (y - h(x))X$$</div>
-<p><span class="math">\(\alpha\)</span> is the learning rate and <span class="math">\(m\)</span> is the number of samples.</p>
+<p><span class="math">\(\alpha\)</span> is the learning rate and <span class="math">\(m\)</span> is the number of samples. <span class="math">\(\alpha\)</span> should be big enough to be able to converge in a reasonable amount of time, but small enough to actually converge. The reason there is the constant <span class="math">\(m\)</span> is to make the error in the same range regardless of the training size. Without <span class="math">\(m\)</span>, you have to change <span class="math">\(\alpha\)</span> based on the training size, which is tedious.</p>
+<hr />
 <h4>Exercise 2</h4>
 <p>Let's complete <code>fit</code> method. I made a lot of changes to it. First I added <code>m</code>. Inside the for loop is gradient descent. I added code to calculate the sum of squares error and print it. It's not necessary for gradient descent because it only needs to compute the partial derivative of the error. Nevertheless, it is helpful to make sure the error is decreasing in every epoch. I only left the main part for the exercise. If you follow the above formula, you will be fine:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
@@ -260,7 +264,7 @@
 <h3>score</h3>
 <hr />
 <h4>Exercise 4</h4>
-<p><a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression">LinearRegression</a> class in scikit-learn has <code>score</code> method. The score of classification is just the mean accuracy. But in regression, it's slightly more complecated than that. I will omit the explanation and just quote the formula fron the documentation.</p>
+<p><a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html#sklearn.linear_model.LinearRegression">LinearRegression</a> class in scikit-learn has <code>score</code> method. The score of classification is just the mean accuracy. But in regression, it's slightly more complicated than that. I will omit the explanation and just quote the formula from the documentation.</p>
 <blockquote>
 <p>The coefficient R^2 is defined as <code>(1 - u/v)</code>, where <code>u</code> is the regression sum of squares
 <code>((y_true - y_pred) ** 2).sum()</code> and <code>v</code> is the residual sum of squares
@@ -317,9 +321,9 @@
 
 <hr />
 <h3>Stochastic Gradient Descent</h3>
-<p>The above code updates the weights after looking at all the samples. It's called Batch Gradient Descent. If the sample size is huge, it will be slow. Stochastic Gradient Descent(or SGD for short) solves this problem by updating the weights after each sample, which is much faster. The downside is that it no longer converges to the minimum, but in practice it makes very little difference.</p>
+<p>The above code updates the weights after looking at all the samples. It's called <em>Batch Gradient Descent</em>. If the sample size is huge, it will be slow. <em>Stochastic Gradient Descent</em>(or SGD for short) solves this problem by updating the weights after each sample, which is much faster. The downside is that it no longer converges to the minimum, but in practice it makes very little difference.</p>
 <h4>Exercise 5</h4>
-<p>Let's write SGD. We might want to shuffle the samples after each epoch, so we add <code>shuffle</code> parameter. We also have <code>_shuffle</code> method. Numpy's <code>random.permutation</code> makes it easy. Your code should update the weights after each sample. </p>
+<p>Let's write SGD. We might want to shuffle the samples after each epoch, so we are going to add <code>shuffle</code> parameter. We also have <code>_shuffle</code> method. Numpy's <code>random.permutation</code> makes it easy. Notice that we no longer have <code>m</code>. Your code should update the weights after each sample. </p>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">LinearRegressionSGD</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
@@ -329,7 +333,6 @@
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>
@@ -345,11 +348,10 @@
 
 <hr />
 <h4>Solution</h4>
-<p>We loop through the samples using <code>zip</code> and the rest is very similar to batch gradient descent:</p>
+<p>We loop through the samples using <code>zip</code> and the rest is similar to batch gradient descent:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>
@@ -357,23 +359,21 @@
         <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
             <span class="n">error</span> <span class="o">=</span> <span class="n">target</span> <span class="o">-</span> <span class="n">output</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">/</span> <span class="n">m</span> <span class="o">*</span> <span class="n">error</span> <span class="o">*</span> <span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">*</span> <span class="n">error</span> <span class="o">*</span> <span class="n">x</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
 
-<p><code>predict</code> and <code>score</code> are the same as before so I omit them.</p>
+<p><code>predict</code> and <code>score</code> are the same as before so I will omit them.</p>
 <hr />
 <h3>The Normal Equations</h3>
-<p>There is a way to directly find a optimal weights using the following formula:</p>
+<p>Actually there is a way to directly find a optimal weights using the following formula:</p>
 <div class="math">$$\theta = (X^T X)^{-1}X^Ty$$</div>
 <p>I'm not going to explain why this works. The detailed explanation can be found at the lecture notes.</p>
 <hr />
 <h4>Exercise 6</h4>
 <p>Now the code becomes surprisingly simpler. You can use numpy's <code>linalg.inv</code> for inverse.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">inv</span>
-
-<span class="k">class</span> <span class="nc">LinearRegressionNormal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LinearRegressionNormal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
@@ -387,7 +387,7 @@
 <hr />
 <h4>Solution</h4>
 <p>Here is mine:</p>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 
 
@@ -406,6 +406,41 @@
 </pre></div>
 
 
+<hr />
+<h3>Diabetes Data Set</h3>
+<p>Let's try our linear regression on the diabetes data set. The following code is inspired by <a href="http://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html">this example from scikit-learn</a>.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">diabetes</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_diabetes</span><span class="p">()</span>
+<span class="c"># Use only one feature</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">diabetes</span><span class="o">.</span><span class="n">target</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=.</span><span class="mi">25</span><span class="p">)</span>
+
+<span class="n">scaler_x</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler_x</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler_x</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="n">regr</span> <span class="o">=</span> <span class="n">LinearRegressionSGD</span><span class="p">(</span><span class="n">eta</span><span class="o">=.</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1500</span><span class="p">)</span>
+<span class="n">regr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span>  <span class="n">color</span><span class="o">=</span><span class="s">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">regr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p>If you want to learn more about <code>train_test_split</code> and <code>StandardScaler</code>, read my last post, <a href="http://kenzotakahashi.github.io/scikit-learns-useful-tools-from-scratch.html">Scikit-learn's useful tools from scratch</a>. When using gradient descent, standardization is important. We are only using one feature so that we can visualize it:</p>
+<p><img alt="Linear Regression" src="theme/images/linear_regression.png" title="Linear Regression" /></p>
+<p>I encourage you to play with the code and see how changing each parameter affects the result.</p>
+<hr />
+<h3>Conclusion</h3>
+<p>If you have questions or comments, tweet <a href="https://twitter.com/kenzotakahashi"><strong>@kenzotakahashi</strong></a> and I'll be happy to help.</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
