@@ -210,12 +210,11 @@
 </pre></div>
 
 
-<p>But a more elegant approach is to use <code>floor</code>:</p>
-<div class="highlight"><pre><span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<p>But a more elegant approach is to use <code>where</code>:</p>
+<div class="highlight"><pre><span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
 
-<p>Even if <code>floor</code> is applied, the output will still be a float, so <code>astype(int)</code> is used to convert to an integer.</p>
 <hr />
 <h3>Update Rule</h3>
 <p>The update rule looks exactly the same as linear regression:</p>
