@@ -122,7 +122,9 @@
 <hr />
 <h3>The Initial Code</h3>
 <p>The code looks identical to our linear regression so far:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogisticRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">LogisticRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
@@ -156,7 +158,7 @@
 <p>It's not clear what this means. The output should be either 0 or 1 because this is a classification. Instead we got some real numbers. To solve this problem, we can use <em>sigmoid function</em>:</p>
 <div class="math">$$g(z) = \frac{1}{1 + e^{-z}}$$</div>
 <p>Here is what sigmoid function looks like:</p>
-<p><img alt="Sigmoid Function" src="theme/images/Sigmoid_Function.png" title="Sigmoid Function" /></p>
+<p><img alt="Sigmoid Function" src="theme/images/figures/Sigmoid_Function.png" title="Sigmoid Function" /></p>
 <p>We can interpret this as the probability that the target class is 1. It still isn't 0 or 1, but intuitively, the output should be 1 when <span class="math">\(g(z) &gt;= 0.5\)</span>.</p>
 <hr />
 <h4>Exercise 1</h4>
