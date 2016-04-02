@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>MLPython</title>
+        <title>Kenzo's Blog</title>
 
 
         <!-- Bootstrap Core CSS -->
@@ -39,7 +39,7 @@
 
 
 			<meta property="og:locale" content="en">
-		<meta property="og:site_name" content="MLPython">
+		<meta property="og:site_name" content="Kenzo's Blog">
 
 	<meta property="og:type" content="article">
 	<meta property="article:author" content="">
@@ -63,7 +63,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">MLPython</a>
+                <a class="navbar-brand" href="/">Kenzo's Blog</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -111,7 +111,7 @@
 <li>Basic machine learning concepts</li>
 </ul>
 <p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything will work fine.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 </pre></div>
 
 
@@ -120,7 +120,7 @@
 <hr />
 <h3>train_test_split</h3>
 <p>Splitting data into a training set and a test set is a basic and essential task. Scikit-learn has <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.train_test_split.html#sklearn.cross_validation.train_test_split">train_test_split</a> from <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.cross_validation">cross_validation</a> module. Here is my simplified version:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">train_test_split_</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -147,7 +147,7 @@
 <p>The first parameter is <code>*arrays</code>. It takes an arbitrary number of arrays to split. <code>test_size</code> and <code>train_size</code> can be either float, int, or None. You can also pass <code>random_state</code>. If <code>test_size</code> or <code>train_size</code> is int, then it represents the absolute number of samples. If they are float, they represent the proportion of the dataset. So you only have to specify either <code>test_size</code> or <code>train_size</code>. If neither of them is specified, it splits the data into 75% training set and 25% test set.</p>
 <p>That's the basic logic. The last line splits the data according to the <code>index</code> and flattens the nested list.</p>
 <p>Typically, you pass both X and y. Here are some examples:</p>
-<div class="highlight"><pre><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=.</span><span class="mi">33</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -162,7 +162,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre>6 4
+<div class="highlight"><pre><span></span>6 4
 7 3
 7 3
 6 4
@@ -177,7 +177,7 @@
 <hr />
 <h4>StandardScaler</h4>
 <p>The basic standardization transforms the data to have 0 mean and unit variance on each feature:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="n">new</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -186,7 +186,7 @@
 
 
 <p>Here is an example:</p>
-<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
               <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
               <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">scale</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
@@ -194,14 +194,14 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="k">[[ 0.         -1.22474487  1.33630621]</span>
+<div class="highlight"><pre><span></span><span class="k">[[ 0.         -1.22474487  1.33630621]</span>
  <span class="k">[ 1.22474487  0.         -0.26726124]</span>
  <span class="k">[-1.22474487  1.22474487 -1.06904497]]</span>
 </pre></div>
 
 
 <p>In practice, you want to use the mean and standard deviation on a training set to a test set. Scikit-learn has <a href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler">StandardScaler</a> class for that:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">class</span> <span class="nc">StandardScaler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -222,14 +222,14 @@
 
 <p><code>fit</code> method saves the mean and standard deviation for later use. When <code>transform</code> is applied on the same data used to fit, it's essentially doing the same thing as the scale function above. <code>fit_transform</code> is just a shortcut method.</p>
 <p>Here is the typical use case. You fit a training data and transform both the training set and a test set:</p>
-<div class="highlight"><pre><span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">]]))</span>
 </pre></div>
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span> <span class="mf">0.</span>         <span class="o">-</span><span class="mf">1.22474487</span>  <span class="mf">1.33630621</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">0.</span>         <span class="o">-</span><span class="mf">1.22474487</span>  <span class="mf">1.33630621</span><span class="p">]</span>
  <span class="p">[</span> <span class="mf">1.22474487</span>  <span class="mf">0.</span>         <span class="o">-</span><span class="mf">0.26726124</span><span class="p">]</span>
  <span class="p">[</span><span class="o">-</span><span class="mf">1.22474487</span>  <span class="mf">1.22474487</span> <span class="o">-</span><span class="mf">1.06904497</span><span class="p">]]</span>
 <span class="p">[[</span><span class="o">-</span><span class="mf">2.44948974</span>  <span class="mf">1.22474487</span> <span class="o">-</span><span class="mf">0.26726124</span><span class="p">]]</span>
@@ -239,7 +239,7 @@
 <hr />
 <h4>MinMaxScaler</h4>
 <p>Another standardization method is to scale the data to lie within certain ranges. This is called <a href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html#sklearn.preprocessing.MinMaxScaler">MinMaxScaler</a>:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">class</span> <span class="nc">MinMaxScaler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
@@ -261,7 +261,7 @@
 
 <p>The first line in <code>transform</code> is the most important. It scales the data to 0:1 no matter <code>feature_range</code>. X likely consists of multiple features, but think about just one feature. If a value is the minimum of the feature, the numerator becomes 0, so the whole thing is 0. If a value is the maximum, then the numerator becomes the same as the denominator, so <code>X_std</code> is 1. The next line rescales <code>X_std</code> according to the feature range.</p>
 <p>Here is an example:</p>
-<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span> <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
               <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">,</span>  <span class="mf">0.</span><span class="p">],</span>
               <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]])</span>
 <span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -271,7 +271,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span> <span class="mf">0.5</span>         <span class="mf">0.</span>          <span class="mf">1.</span>        <span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">0.5</span>         <span class="mf">0.</span>          <span class="mf">1.</span>        <span class="p">]</span>
  <span class="p">[</span> <span class="mf">1.</span>          <span class="mf">0.5</span>         <span class="mf">0.33333333</span><span class="p">]</span>
  <span class="p">[</span> <span class="mf">0.</span>          <span class="mf">1.</span>          <span class="mf">0.</span>        <span class="p">]]</span>
 <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span>         <span class="mf">0.</span>          <span class="mf">1.66666667</span><span class="p">]</span>
@@ -281,14 +281,14 @@
 <hr />
 <h3>accuracy_score</h3>
 <p>Every classification class has its own score method. But scikit-learn's <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics">metrics</a> module also provides a stand-alone function, <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score">accuracy_score</a>. It is actually a very simple function:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="n">correct</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">y_true</span> <span class="o">==</span> <span class="n">y_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">correct</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="k">if</span> <span class="n">normalize</span> <span class="k">else</span> <span class="n">correct</span>
 </pre></div>
 
 
 <p>The first line computes the number of correctly classified samples. The second line divides the value by the total number of samples if <code>normalize</code> is set to True.</p>
-<div class="highlight"><pre><span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
 <span class="k">print</span><span class="p">(</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
@@ -296,7 +296,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre>0.5
+<div class="highlight"><pre><span></span>0.5
 2
 </pre></div>
 
@@ -304,7 +304,7 @@
 <hr />
 <h3>confusion_matrix</h3>
 <p>Another useful function from metrics module is <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix">confusion_matrix</a>. It's also easy to implement:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span> <span class="k">if</span> <span class="n">labels</span> <span class="k">else</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">y_pred</span><span class="p">))</span>        
     <span class="n">indexes</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)}</span>
     <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -315,17 +315,17 @@
 
 
 <p>First we need to know what classes are available. If <code>labels</code> are given, we can just use it. Otherwise, it converts each array into set, take the union, and sort it. Next, it maps each class with its index. Then it initializes a <span class="math">\(n \times n\)</span> matrix where <span class="math">\(n\)</span> is the number of classes. Finally, for each pair of <code>y_true</code> and <code>y_pred</code>, it increments the value of the corresponding cell of the matrix:</p>
-<div class="highlight"><pre><span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<div class="highlight"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
-<span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;ant&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;ant&quot;</span><span class="p">,</span> <span class="s">&quot;bird&quot;</span><span class="p">]</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;ant&quot;</span><span class="p">,</span> <span class="s">&quot;ant&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;ant&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">]</span>
-<span class="k">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;bird&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;ant&quot;</span><span class="p">]))</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;ant&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;ant&quot;</span><span class="p">,</span> <span class="s2">&quot;bird&quot;</span><span class="p">]</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ant&quot;</span><span class="p">,</span> <span class="s2">&quot;ant&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;ant&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bird&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;ant&quot;</span><span class="p">]))</span>
 </pre></div>
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
  <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">]</span>
  <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">]]</span>
 <span class="p">[[</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
@@ -428,7 +428,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted">Copyright © MLPython 2015</p>
+                    <p class="copyright text-muted">Copyright © Kenzo's Blog 2015</p>
                 </div>
             </div>
         </div>

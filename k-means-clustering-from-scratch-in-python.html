@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>MLPython</title>
+        <title>Kenzo's Blog</title>
 
 
         <!-- Bootstrap Core CSS -->
@@ -39,7 +39,7 @@
 
 
 			<meta property="og:locale" content="en">
-		<meta property="og:site_name" content="MLPython">
+		<meta property="og:site_name" content="Kenzo's Blog">
 
 	<meta property="og:type" content="article">
 	<meta property="article:author" content="">
@@ -63,7 +63,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">MLPython</a>
+                <a class="navbar-brand" href="/">Kenzo's Blog</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -114,14 +114,14 @@
 </ul>
 <p>My code follows the scikit-learn style. If you are unfamiliar with scikit-learn, I recommend you check out the <a href="http://scikit-learn.org/stable/index.html">website</a>. I also briefly mention it in my post, <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>.</p>
 <p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything should work fine.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 </pre></div>
 
 
 <hr />
 <h3>Initial Code</h3>
 <p>Our k-means class takes 3 parameters: number of clusters, number of iteration, and random state.</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -134,10 +134,10 @@
 <hr />
 <h4>Exercise 1</h4>
 <p>The first thing we need to do is initialize clusters by randomly selecting k samples. This is actually not as simple as it might seem. There are a lot of ways to do it:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
-    <span class="c"># Your code here</span>
+    <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
@@ -147,7 +147,7 @@
 
 
 <p>Our toy example consists of 5 samples with 2 attribues. In this example, <code>n_clusters=2</code>. So it randomly picks 2 samples from X.</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="mi">2</span> <span class="mi">2</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span> <span class="mi">2</span><span class="p">]</span>
  <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]]</span>
 </pre></div>
 
@@ -155,7 +155,7 @@
 <hr />
 <h4>Solution</h4>
 <p>The best way I found is to use <code>np.random.permutation</code>:</p>
-<div class="highlight"><pre><span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">initial</span><span class="p">]</span>
 </pre></div>
 
@@ -164,8 +164,8 @@
 <h4>Exercise 2</h4>
 <p>Before we continue with <code>fit</code>, we need to write a few helper methods. We want to measure the distance between a cluster center and a sample using Euclidean distance:</p>
 <div class="math">$$d(p, q) = \sqrt{\displaystyle\sum_{i=1}^{n} (p_i - q_i)^2}$$</div>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])))</span>
@@ -173,14 +173,14 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="mf">4.472135955</span>
+<div class="highlight"><pre><span></span><span class="mf">4.472135955</span>
 </pre></div>
 
 
 <p>which is <span class="math">\(\sqrt{(1 - 3)^2 + (-1 -3)^2}\)</span></p>
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 </pre></div>
 
@@ -188,8 +188,8 @@
 <hr />
 <h4>Exercise 3</h4>
 <p>Next, we are going to write a method to choose the nearest cluster given a sample. Your code should return the <em>index</em> of the nearest cluster, not the cluster itself:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c"># Your code</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Your code</span>
 
 <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">_nearest</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])))</span>
@@ -200,7 +200,7 @@
 <hr />
 <h4>Solution</h4>
 <p>You can use <code>numpy.argmin</code>:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_nearest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clusters</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_distance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">])</span>
 </pre></div>
 
@@ -208,7 +208,7 @@
 <hr />
 <h3>Iteration</h3>
 <p>So far our k-means looks like this:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
@@ -232,14 +232,14 @@
 <hr />
 <h4>Exercise 4</h4>
 <p>Let's go back to <code>fit</code>. Inside the for loop is going to be where the actual learning happens. <code>self.labels</code> is a list of indices of cluster centers. Group the samples according to the clusters:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">initial</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels_</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_nearest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
-        <span class="c"># Your code here</span>
+        <span class="c1"># Your code here</span>
         <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">)</span>
         <span class="k">print</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
         <span class="k">return</span>
@@ -251,7 +251,7 @@
 
 
 <p><code>[2,2]</code>,<code>[4,5]</code>, and <code>[5,4]</code> are closer to the first cluser center <code>[2,2]</code>. So their indices belong to the first list of <code>indices</code>. Similarly, <code>[1,1]</code> and <code>[1,2]</code> are closer to the first cluster center <code>[1 2]</code>:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="mi">2</span> <span class="mi">2</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span> <span class="mi">2</span><span class="p">]</span>
  <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]]</span>
 <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
 </pre></div>
@@ -260,14 +260,14 @@
 <hr />
 <h4>Solution</h4>
 <p>My first attempt was this:</p>
-<div class="highlight"><pre><span class="n">indices</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">):</span>
     <span class="n">indices</span><span class="p">[</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 </pre></div>
 
 
 <p>After that I found another solution using list comprehension:</p>
-<div class="highlight"><pre><span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
 </pre></div>
 
@@ -275,7 +275,7 @@
 <hr />
 <h4>Exercise 5</h4>
 <p>I added <code>X_by_cluster</code>, which is a list of actual samples grouped by cluster. Now we can update <code>self.cluster_centers_</code> by averaging these samples:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
@@ -286,7 +286,7 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
         <span class="n">X_by_cluster</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span>  <span class="o">=</span> <span class="c"># Your code here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span>  <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
@@ -297,20 +297,20 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="n">array</span><span class="p">([</span> <span class="mf">3.66666667</span><span class="p">,</span>  <span class="mf">3.66666667</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span> <span class="mf">1.</span> <span class="p">,</span>  <span class="mf">1.5</span><span class="p">])]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="n">array</span><span class="p">([</span> <span class="mf">3.66666667</span><span class="p">,</span>  <span class="mf">3.66666667</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span> <span class="mf">1.</span> <span class="p">,</span>  <span class="mf">1.5</span><span class="p">])]</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X_by_cluster</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X_by_cluster</span><span class="p">]</span>
 </pre></div>
 
 
 <hr />
 <h4>Exercise 6</h4>
 <p>When using an optimization algorithm like gradient descent, there is an error that it tries to minimize. While k-means does not explicitly try to minimize some error, we still have a way to measure error. It's called <em>inertia</em>. Inertia is the sum of square distances of samples to their closest cluster center. The smaller the inertia, the better.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_state</span><span class="p">)</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">]</span>
@@ -320,10 +320,10 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
         <span class="n">X_by_cluster</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
-        <span class="c"># update the clusters</span>
+        <span class="c1"># update the clusters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X_by_cluster</span><span class="p">]</span>
-    <span class="c"># sum of square distances from the closest cluster</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span> <span class="o">=</span> <span class="c"># Your code here</span>
+    <span class="c1"># sum of square distances from the closest cluster</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span> <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
@@ -334,13 +334,13 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="mf">2.33333333333</span>
+<div class="highlight"><pre><span></span><span class="mf">2.33333333333</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
                     <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">))</span>
 </pre></div>
 
@@ -348,13 +348,13 @@
 <p>You can also move the code inside the for loop and print it out after each iteration to make sure your code is working.</p>
 <p>As the number of clusters k increases, inertia decreases. Eventually, when k = sample size, inertia is 0 because every cluster center is the sample itself. That does not mean you should just increase k though!</p>
 <p>Also the score method in scikit-learn is - inertia:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span>
 </pre></div>
 
 
 <p>Here is the complete code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">KMeans</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
@@ -371,9 +371,9 @@
             <span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
                         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">)]</span>
             <span class="n">X_by_cluster</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
-            <span class="c"># update the clusters</span>
+            <span class="c1"># update the clusters</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">X_by_cluster</span><span class="p">]</span>
-        <span class="c"># sum of square distances from the closest cluster</span>
+        <span class="c1"># sum of square distances from the closest cluster</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inertia_</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
                             <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -494,7 +494,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted">Copyright © MLPython 2015</p>
+                    <p class="copyright text-muted">Copyright © Kenzo's Blog 2015</p>
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>MLPython</title>
+        <title>Kenzo's Blog</title>
 
 
         <!-- Bootstrap Core CSS -->
@@ -39,7 +39,7 @@
 
 
 			<meta property="og:locale" content="en">
-		<meta property="og:site_name" content="MLPython">
+		<meta property="og:site_name" content="Kenzo's Blog">
 
 	<meta property="og:type" content="article">
 	<meta property="article:author" content="">
@@ -63,7 +63,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">MLPython</a>
+                <a class="navbar-brand" href="/">Kenzo's Blog</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -115,14 +115,14 @@
 </ul>
 <p>My code follows the scikit-learn style. If you are unfamiliar with scikit-learn, I recommend you check out the <a href="http://scikit-learn.org/stable/index.html">website</a>. I also briefly mention it in my post, <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>.</p>
 <p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything should work fine.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 </pre></div>
 
 
 <hr />
 <h3>The Initial Code</h3>
 <p>The code looks identical to our linear regression so far:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">class</span> <span class="nc">LogisticRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
@@ -140,7 +140,7 @@
 <hr />
 <h3>Sigmoid Function</h3>
 <p>Before working on <code>fit</code>, let's see what <code>predict</code> looks like. We will change it later, but for now it is exactly the same as our linear regression:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]])</span>
@@ -151,7 +151,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span> <span class="mf">1.</span> <span class="o">-</span><span class="mf">2.</span>  <span class="mf">2.</span> <span class="o">-</span><span class="mf">2.</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span> <span class="mf">1.</span> <span class="o">-</span><span class="mf">2.</span>  <span class="mf">2.</span> <span class="o">-</span><span class="mf">2.</span><span class="p">]</span>
 </pre></div>
 
 
@@ -163,8 +163,8 @@
 <hr />
 <h4>Exercise 1</h4>
 <p>Before we get any further, let's write sigmoid function:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">logi</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">logi</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
@@ -174,7 +174,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="mf">0.952574126822</span>
+<div class="highlight"><pre><span></span><span class="mf">0.952574126822</span>
 <span class="mf">0.26894142137</span>
 <span class="mf">0.5</span>
 </pre></div>
@@ -182,16 +182,16 @@
 
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
 </pre></div>
 
 
 <hr />
 <h4>Exercise 2</h4>
 <p>Now we can write the correct version of <code>predict</code>. We already have the output. So your code should apply the sigmoid function to the output and return 1 if it's greater than or equal to 0.5, 0 otherwise:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
-    <span class="c"># Your code here</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
@@ -201,19 +201,19 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
 <p>You could use list comprehension:</p>
-<div class="highlight"><pre><span class="k">return</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="k">return</span> <span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)]</span>
 </pre></div>
 
 
 <p>But a more elegant approach is to use <code>where</code>:</p>
-<div class="highlight"><pre><span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sigmoid</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
 
@@ -222,7 +222,7 @@
 <p>The update rule looks exactly the same as linear regression:</p>
 <div class="math">$$\theta := \theta + \frac{\alpha}{m} (y - h(x))X$$</div>
 <p>But in linear regression, <span class="math">\(h(x) = X\theta\)</span>. In logistic regression, however, <span class="math">\(h(x) = g(X\theta)\)</span> where <span class="math">\(g\)</span> is sigmoid function. So <code>fit</code> looks like this:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -236,13 +236,13 @@
 
 
 <p>Every classification class in scikit-learn has the same <code>score</code> method. I talked about it in <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>, so I will just show the code here:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 
 
 <p>Here is the complete code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogisticRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LogisticRegression</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
@@ -271,7 +271,7 @@
 
 
 <p>We can test the code:</p>
-<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]])</span>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">logi</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">logi</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
@@ -279,7 +279,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
 
@@ -290,7 +290,7 @@
 <p>Here is how OvR works. Suppose you have 3 target classes, A,B, and C. First you treat B and C as one class, D and run a logistic regression. This classifier separates A and D. Next you treat A and C as D, and so on. You will have 3 independent logistic regressions.</p>
 <p>When you predict, you will run the 3 classififers. Each one gives the probability of the class associated with it. Whichever has the highest probability is the most probable class.</p>
 <p>Let's see how it's done in code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">LogisticRegressionOVR</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LogisticRegressionOVR</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">=</span> <span class="n">n_iter</span>
@@ -315,7 +315,7 @@
 
 <p><code>np.unique(y)</code> creates an array of class labels. For each label, you make <code>y_copy</code>, which changes the labels of <code>y</code>. Now that <code>y_copy</code> has only 1's and 0's, we can run logistic regression. After the inner for loop, <code>self.w.append((w, i))</code> appends the weights and the correspoing class label to <code>self.w</code>.</p>
 <p>Let's test the code on the iris flower dataset. <code>np.set_printoptions</code> sets the precision of float numbers when printing. Notice that I set <code>n_iter</code> to 1000.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
@@ -326,15 +326,15 @@
 
 
 <p>Since the the iris dataset has 4 features and 3 classes, <code>self.w</code> looks like this:</p>
-<div class="highlight"><pre><span class="p">[(</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.11</span> <span class="p">,</span>  <span class="mf">0.174</span><span class="p">,</span>  <span class="mf">2.1</span>  <span class="p">,</span> <span class="o">-</span><span class="mf">2.901</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.689</span><span class="p">]),</span> <span class="mi">0</span><span class="p">),</span>
+<div class="highlight"><pre><span></span><span class="p">[(</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.11</span> <span class="p">,</span>  <span class="mf">0.174</span><span class="p">,</span>  <span class="mf">2.1</span>  <span class="p">,</span> <span class="o">-</span><span class="mf">2.901</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.689</span><span class="p">]),</span> <span class="mi">0</span><span class="p">),</span>
  <span class="p">(</span><span class="n">array</span><span class="p">([</span> <span class="mf">1.509</span><span class="p">,</span>  <span class="mf">0.481</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.805</span><span class="p">,</span>  <span class="mf">0.49</span> <span class="p">,</span> <span class="o">-</span><span class="mf">1.268</span><span class="p">]),</span> <span class="mi">1</span><span class="p">),</span>
  <span class="p">(</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.472</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.298</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.804</span><span class="p">,</span>  <span class="mf">3.015</span><span class="p">,</span>  <span class="mf">3.19</span> <span class="p">]),</span> <span class="mi">2</span><span class="p">)]</span>
 </pre></div>
 
 
 <p>We also make some changes to <code>predict</code>. We are going to predict one instance at a time so the new <code>predict</code> calls <code>_predict_one</code> for each instance and puts them in a list.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c"># predicts one instance</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># predicts one instance</span>
 
 <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict_one</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
@@ -344,22 +344,22 @@
 <hr />
 <h4>Exercise 3</h4>
 <p>Let's write <code>_predict_one</code>. It should compute <span class="math">\(Xθ\)</span> on each set of weights, take the maximum value, and return the corresponding class label.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
 <p>It can be done in 1 line:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_predict_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">max</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
 
 <p>Notice I am not applying sigmoid function to <span class="math">\(Xθ\)</span>. Since we just need to take the maximum value, it's not necessary.</p>
 <p>Let's test our new logistic regression:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_temp</span> <span class="o">=</span> \
@@ -376,7 +376,7 @@
 
 <p>Using <code>train_test_split</code> function from cross_validation module, it first splits the data in the ratio 60:40, then splits the latter in half. Now we have 60% for the training set, 20% for the validation and test set.</p>
 <p>I ran it multiple times with different <code>n_iter</code>. It looks like we need at least 300 epochs to get a good result. Once you find the good parameters, you can get the true score on the test set.</p>
-<div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">neighbor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
 </pre></div>
 
 
@@ -474,7 +474,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted">Copyright © MLPython 2015</p>
+                    <p class="copyright text-muted">Copyright © Kenzo's Blog 2015</p>
                 </div>
             </div>
         </div>

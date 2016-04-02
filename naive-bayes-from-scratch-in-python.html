@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>MLPython</title>
+        <title>Kenzo's Blog</title>
 
 
         <!-- Bootstrap Core CSS -->
@@ -39,7 +39,7 @@
 
 
 			<meta property="og:locale" content="en">
-		<meta property="og:site_name" content="MLPython">
+		<meta property="og:site_name" content="Kenzo's Blog">
 
 	<meta property="og:type" content="article">
 	<meta property="article:author" content="">
@@ -63,7 +63,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">MLPython</a>
+                <a class="navbar-brand" href="/">Kenzo's Blog</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -113,7 +113,7 @@
 </ul>
 <p>My code follows the scikit-learn style. If you are unfamiliar with scikit-learn, I recommend you check out the <a href="http://scikit-learn.org/stable/index.html">website</a>. I also briefly mention it in my post, <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>.</p>
 <p>I'm using python3. If you want to use python2, add this line at the beginning of your file and everything should work fine.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 </pre></div>
 
 
@@ -123,7 +123,7 @@
 <!-- Our MultinomialNB takes one parameter `alpha`. It's Laplace smoothing parameter. In the book, alpha = 1.  -->
 
 <p>Here is the initial code. <code>alpha</code> is a smoothing parameter which will be used later.</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MultinomialNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -131,7 +131,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="c"># group by class</span>
+        <span class="c1"># group by class</span>
         <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
         <span class="k">print</span><span class="p">(</span><span class="n">separated</span><span class="p">)</span>
 </pre></div>
@@ -139,7 +139,7 @@
 
 <p>First we need to group the training data by class. There are a lot of ways to accomplish the task. The obvious way is to use something like defaultdict. Instead, I'm using <code>np.unique</code>. It's much cleaner. But notice that we have to loop through <code>X</code>, the entire training data, for each class. If you have 20 target classes to classify, it would be inefficient. But most of the time you only have 2 classes, so it will be fine.</p>
 <p>Let's try our code. I converted the data from table 13.1 to a matrix. We have 4 documents with 6 words(Chinese, Beijing, Shanghai, Macao, Tokyo, Japan) for the training set. In the book, the target class is yes or no, but I changed them to 0 and 1, respectively:</p>
-<div class="highlight"><pre><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
     <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
     <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
     <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -152,7 +152,7 @@
 
 <p>This is the format that scikit-learn expects. Automatically constructing a word count matrix from raw text is not part of naive bayes. There is <a href="http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_extraction.text">feature_extraction.text</a> submodule for that. I might write another post about it in the future.</p>
 <p>The output is a list of lists, each of which contains the samples:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])],</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])],</span>
  <span class="p">[</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])]]</span>
 </pre></div>
 
@@ -161,10 +161,10 @@
 <hr />
 <h4>Exercise 1</h4>
 <p>Your first exercise is to calculate <span class="math">\(log\hat{p}(c)\)</span>, the prior log probability for each class. Log probability is used to avoid floating point underflow. You can use <code>count_sample</code>, which is the number of training samples.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="n">count_sample</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="c"># Your code here</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -173,25 +173,25 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="o">-</span><span class="mf">0.2876820724517809</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3862943611198906</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="o">-</span><span class="mf">0.2876820724517809</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.3862943611198906</span><span class="p">]</span>
 </pre></div>
 
 
 <p>These numbers might not make much sense to you, but they are log of .75 and .25.</p>
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
 </pre></div>
 
 
 <hr />
 <h4>Exercise 2</h4>
 <p>Next we want to count each word for each class and add <code>self.alpha</code> as smoothing:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="n">count_sample</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="c"># Your code here</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">print</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span>
 
@@ -200,7 +200,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="mi">6</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">6</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">]</span>
  <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">]]</span>
 </pre></div>
 
@@ -209,20 +209,20 @@
 <hr />
 <h4>Solution</h4>
 <p>We can use numpy's <code>sum</code> to broadcast sum operation. <code>+ self.alpha</code> is also broadcasted.</p>
-<div class="highlight"><pre><span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+<div class="highlight"><pre><span></span><span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
 </pre></div>
 
 
 <hr />
 <h4>Exercise 3</h4>
 <p>Finally we can calculate the log probability of each word, <span class="math">\(log\hat{p}(t|c)\)</span>. You divide count by the length of text:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="n">count_sample</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
     <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span>
-    <span class="c"># log probability of each word</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="c"># Your code here</span>
+    <span class="c1"># log probability of each word</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -231,7 +231,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="o">-</span><span class="mf">0.847298</span> <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">2.639057</span> <span class="o">-</span><span class="mf">2.639057</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="o">-</span><span class="mf">0.847298</span> <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">1.94591</span>  <span class="o">-</span><span class="mf">2.639057</span> <span class="o">-</span><span class="mf">2.639057</span><span class="p">]</span>
  <span class="p">[</span><span class="o">-</span><span class="mf">1.504077</span> <span class="o">-</span><span class="mf">2.197225</span> <span class="o">-</span><span class="mf">2.197225</span> <span class="o">-</span><span class="mf">2.197225</span> <span class="o">-</span><span class="mf">1.504077</span> <span class="o">-</span><span class="mf">1.504077</span><span class="p">]]</span>
 </pre></div>
 
@@ -239,7 +239,7 @@
 <hr />
 <h4>Solution</h4>
 <p>There is a lot going on in 1 line. In our example, <code>count.sum(axis=1)</code> is <code>[14, 9]</code>. To broadcast it, we need to transpose it. But for some reason, transposing 1d array is a bit inconvenient in numpy. Just adding <code>.T</code> does nothing. So you have to use <code>[np.newaxis]</code>:</p>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">count</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">count</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
 
 
@@ -248,26 +248,26 @@
 <hr />
 <h4>Exercise 4</h4>
 <p>Now we have the code to train the data, we can predict.  <code>predict_log_proba</code> outputs the log probability of each class. Use <code>self.class_log_prior_</code> and <code>self.feature_log_prob_</code> for the calculation:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 </pre></div>
 
 
 <p>The first test data is the same as the book. The second one I made up:</p>
-<div class="highlight"><pre><span class="n">nb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
 <span class="k">print</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">predict_log_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
 </pre></div>
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">8.10769</span> <span class="p">,</span> <span class="o">-</span><span class="mf">8.906681</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">9.457617</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.788898</span><span class="p">])]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">8.10769</span> <span class="p">,</span> <span class="o">-</span><span class="mf">8.906681</span><span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">9.457617</span><span class="p">,</span> <span class="o">-</span><span class="mf">8.788898</span><span class="p">])]</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_log_prob_</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
 </pre></div>
@@ -276,8 +276,8 @@
 <hr />
 <h4>Exercise 5</h4>
 <p><code>predict_log_proba</code> does most of the work, so <code>predict</code> just calls it and picks the maximum value.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
@@ -286,20 +286,20 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
 <p>You can use <code>argmax</code> to return the corresponding index:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_log_proba</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
 
 <p>Here is the complete code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MultinomialNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MultinomialNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
 
@@ -325,47 +325,47 @@
 <p>Bernoulli naive bayes is similar to multinomial naive bayes, but it only takes binary values. In our example, each value will be whether or not a word appears in a document. That is a very simplified model. Nevertheless, when word frequency is less important, bernoulli naive bayes may yield a better result. </p>
 <p>We will continue using the same example. The corresponding part in the book is <a href="http://nlp.stanford.edu/IR-book/html/htmledition/the-bernoulli-model-1.html">here</a>.</p>
 <p>Most of <code>fit</code> is the same as MultinomialNB. I added two lines. <code>n_doc</code> is the number of documents in each class + smoothing where smoothing is <code>2 * self.alpha</code>.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="n">count_sample</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c"># group by class</span>
+        <span class="c1"># group by class</span>
         <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
-        <span class="c"># class prior</span>
+        <span class="c1"># class prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
-        <span class="c"># count of each word</span>
+        <span class="c1"># count of each word</span>
         <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
 
         <span class="n">smoothing</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
-        <span class="c"># number of documents in each class + smoothing</span>
+        <span class="c1"># number of documents in each class + smoothing</span>
         <span class="n">n_doc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">smoothing</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span>
         <span class="k">print</span><span class="p">(</span><span class="n">n_doc</span><span class="p">)</span>
 </pre></div>
 
 
 <p>We have to change <code>X</code> to have binary values. We can use <code>numpy.where</code> to change every value that is greater than 0 to 1:</p>
-<div class="highlight"><pre><span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="mi">5</span> <span class="mi">3</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">5</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
 
 <h4>Exercise 6</h4>
 <p>The last part of <code>fit</code> is <code>self.feature_prob_</code>. We don't take log at this point. You will see why in a minute:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">count_sample</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">count_sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">]</span>
     <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
     <span class="n">smoothing</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
     <span class="n">n_doc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">smoothing</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span>
-    <span class="c"># probability of each word</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span> <span class="o">=</span> <span class="c"># Your code here</span>
+    <span class="c1"># probability of each word</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span> <span class="o">=</span> <span class="c1"># Your code here</span>
     <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
@@ -374,7 +374,7 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span> <span class="mf">0.8</span>       <span class="mf">0.4</span>       <span class="mf">0.4</span>       <span class="mf">0.4</span>       <span class="mf">0.2</span>       <span class="mf">0.2</span>     <span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">0.8</span>       <span class="mf">0.4</span>       <span class="mf">0.4</span>       <span class="mf">0.4</span>       <span class="mf">0.2</span>       <span class="mf">0.2</span>     <span class="p">]</span>
  <span class="p">[</span> <span class="mf">0.666667</span>  <span class="mf">0.333333</span>  <span class="mf">0.333333</span>  <span class="mf">0.333333</span>  <span class="mf">0.666667</span>  <span class="mf">0.666667</span><span class="p">]]</span>
 </pre></div>
 
@@ -382,15 +382,15 @@
 <hr />
 <h4>Solution</h4>
 <p>It's similar to MultinomialNB:</p>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span> <span class="o">=</span> <span class="n">count</span> <span class="o">/</span> <span class="n">n_doc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span> <span class="o">=</span> <span class="n">count</span> <span class="o">/</span> <span class="n">n_doc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 
 
 <hr />
 <h4>Exercise 7</h4>
 <p>This is probably the toughest exercise in this tutorial. Just like last time, your code should output the log probability of each class. In multinomial model, nonoccuring words do not affect the posterior probability. But in bernoulli model, <span class="math">\(1 - \hat{p}(t|c)\)</span> is used instead. That's why I didn't take log in <code>fit</code>. <em>Hint:</em> You can use if statement, but my solution does not have one:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
 <span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">X</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
@@ -399,14 +399,14 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">8.927341</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.82724</span> <span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">7.459403</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.898527</span><span class="p">])]</span>
+<div class="highlight"><pre><span></span><span class="p">[</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">8.927341</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.82724</span> <span class="p">]),</span> <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">7.459403</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.898527</span><span class="p">])]</span>
 </pre></div>
 
 
 <hr />
 <h4>Solution</h4>
 <p>My solution is a really long 1 line. Sometimes you can express a control flow using math. <code>np.abs(x - 1)</code> flips 1 and 0. It does look cryptic at first, but I found it much cleaner than using if-else.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> \
              <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_prob_</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_log_prior_</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
@@ -414,7 +414,7 @@
 
 
 <p><code>predict</code> is the same as MultinomialNB, so we are done!</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
 
@@ -441,7 +441,7 @@
 <hr />
 <h3>Binarize</h3>
 <p>So far, we have been manually binarizing X. It would be nice if it's done automatically. <a href="http://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html#sklearn.naive_bayes.BernoulliNB">BernoulliNB in scikit-learn</a> has binarize parameter for that:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">BernoulliNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">binarize</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">binarize</span> <span class="o">=</span> <span class="n">binarize</span>
@@ -450,7 +450,7 @@
 
 <p>It specifies the threshold for binarizing. You can set it to <code>None</code> if your data does not need binarizing.</p>
 <p>I added 1 line of code to the beginning of every method that uses X. It calls <code>_binarize_X</code>, which does the actual binarizing.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_binarize_X</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
     <span class="o">...</span>
 
@@ -468,7 +468,7 @@
 
 
 <p>Now you can just pass X:</p>
-<div class="highlight"><pre><span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">nb</span> <span class="o">=</span> <span class="n">BernoulliNB</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 
 
@@ -480,19 +480,19 @@
 <hr />
 <h4>Exercise 8</h4>
 <p><code>GaussianNB</code> takes no parameter. <code>separated</code> is the same as the other models. <code>self.model</code> is going to be the mean and the standard deviation of each attribute for each class.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">GaussianNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GaussianNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="n">separated</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="c"># Your code here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="c1"># Your code here</span>
         <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
 
 <p>We are going to use the iris flower dataset:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
 <span class="n">nb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
@@ -500,7 +500,7 @@
 
 
 <p>The iris dataset has 4 features and 3 classes, so the output looks like this:</p>
-<div class="highlight"><pre><span class="p">[[[</span> <span class="mf">5.006</span>     <span class="mf">0.348947</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="p">[[[</span> <span class="mf">5.006</span>     <span class="mf">0.348947</span><span class="p">]</span>
   <span class="p">[</span> <span class="mf">3.418</span>     <span class="mf">0.377195</span><span class="p">]</span>
   <span class="p">[</span> <span class="mf">1.464</span>     <span class="mf">0.171767</span><span class="p">]</span>
   <span class="p">[</span> <span class="mf">0.244</span>     <span class="mf">0.106132</span><span class="p">]]</span>
@@ -521,13 +521,13 @@
 <hr />
 <h4>Solution</h4>
 <p>Here is my solution:</p>
-<div class="highlight"><pre><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">separated</span><span class="p">])</span>
 </pre></div>
 
 
 <p><code>numpy.c_</code> is like <code>zip</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
 <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
        <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
 </pre></div>
@@ -537,9 +537,9 @@
 <h4>Exercise 9</h4>
 <p>Let's write gaussian distribution. The formula is as follows:</p>
 <div class="math">$$f(x | \mu, \sigma) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}}$$</div>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gaussian distribution in log&quot;&quot;&quot;</span>
-    <span class="c"># Your code here</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">_prob</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
@@ -547,14 +547,14 @@
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="o">-</span><span class="mf">0.918938533205</span>
+<div class="highlight"><pre><span></span><span class="o">-</span><span class="mf">0.918938533205</span>
 </pre></div>
 
 
 <p>which is <span class="math">\(log(.4)\)</span>.</p>
 <hr />
 <h4>Solution</h4>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gaussian distribution in log&quot;&quot;&quot;</span>
     <span class="n">exponent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">std</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">exponent</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span><span class="p">))</span>
@@ -564,16 +564,16 @@
 <hr />
 <h4>Exercise 10</h4>
 <p>This is the last exercise in this tutorial. <code>predict_log_proba</code> is as simple as applying the gaussian distribution, though the code might not necessarily be simple:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="c"># Your code here</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="c1"># Your code here</span>
 
 <span class="n">nb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">predict_log_proba</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span> <span class="c"># just two samples</span>
+<span class="k">print</span><span class="p">(</span><span class="n">nb</span><span class="o">.</span><span class="n">predict_log_proba</span><span class="p">(</span><span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span> <span class="c1"># just two samples</span>
 </pre></div>
 
 
 <p>Output:</p>
-<div class="highlight"><pre><span class="p">[[</span><span class="mf">2.1414955664687394</span><span class="p">,</span> <span class="o">-</span><span class="mf">38.979365927930132</span><span class="p">,</span> <span class="o">-</span><span class="mf">55.744042534101993</span><span class="p">],</span>
+<div class="highlight"><pre><span></span><span class="p">[[</span><span class="mf">2.1414955664687394</span><span class="p">,</span> <span class="o">-</span><span class="mf">38.979365927930132</span><span class="p">,</span> <span class="o">-</span><span class="mf">55.744042534101993</span><span class="p">],</span>
  <span class="p">[</span><span class="mf">1.5412386825371427</span><span class="p">,</span> <span class="o">-</span><span class="mf">37.209274991620475</span><span class="p">,</span> <span class="o">-</span><span class="mf">55.191594591414542</span><span class="p">]]</span>
 </pre></div>
 
@@ -581,14 +581,14 @@
 <hr />
 <h4>Solution</h4>
 <p>There are three loops in the code. The first one(<code>for x in X</code>) loops through each sample. The second one loops through each class. And the last one loops through each attribute and applies the gaussian distribution. <code>*s</code> unpacks an array of mean and standard deviation.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_log_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[[</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prob</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">summaries</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">summaries</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
 </pre></div>
 
 
 <p><code>predict</code> is the same as the other models. Here is the complete code:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">GaussianNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">GaussianNB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
@@ -616,7 +616,7 @@
 
 <p>I also added <code>score</code>. Every classification class in scikit-learn has the same score method. I talked about it in <a href="http://kenzotakahashi.github.io/k-nearest-neighbor-from-scratch-in-python.html">K-Nearest Neighbor from Scratch in Python</a>.</p>
 <p>Let's test it:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
@@ -721,7 +721,7 @@
                             </a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted">Copyright © MLPython 2015</p>
+                    <p class="copyright text-muted">Copyright © Kenzo's Blog 2015</p>
                 </div>
             </div>
         </div>
