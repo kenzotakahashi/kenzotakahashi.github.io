@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-        <meta charset="utf-8">
+            <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Kenzo's Blog - Articles by Kenzo Takahashi</title>
+        <title>Kenzo's Blog</title>
 
 
         <!-- Bootstrap Core CSS -->
@@ -33,8 +33,21 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-		<meta property="og:locale" content="en">
+
+
+
+
+
+			<meta property="og:locale" content="en">
 		<meta property="og:site_name" content="Kenzo's Blog">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="/drafts/the-foundation-day-6.html">
+	<meta property="og:title" content="The Foundation - day 6">
+	<meta property="og:description" content="">
+	<meta property="og:image" content="//theme/images/landscape.jpg">
+	<meta property="article:published_time" content="2016-04-06 00:00:00+09:00">
 </head>
 
 <body>
@@ -65,12 +78,17 @@
     </nav>
 
     <!-- Page Header -->
-        <header class="intro-header" style="background-image: url('theme/images/geiranger-fjord.jpg')">
+        <header class="intro-header" style="background-image: url('/theme/images/landscape.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Articles by Kenzo Takahashi</h1>
+                        <h1>The Foundation - day 6</h1>
+                        <span class="meta">Posted by
+                                <a href="/author/kenzo-takahashi.html">Kenzo Takahashi</a>
+                             on Wed 06 April 2016
+                        </span>
+                        
                     </div>
                 </div>
             </div>
@@ -81,41 +99,18 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-preview">
-            <a href="/scikit-learns-useful-tools-from-scratch.html" rel="bookmark" title="Permalink to Scikit-learn's Useful Tools from Scratch">
-                <h2 class="post-title">
-                    Scikit-learn's Useful Tools from Scratch
-                </h2>
-            </a>
-                <p>Scikit-learn offers a lot of tools that make our life easier. Many of them are really simple, so let's write them from ...
-            <p class="post-meta">Posted by
-                    <a href="/author/kenzo-takahashi.html">Kenzo Takahashi</a>
-                 on Sat 09 January 2016
-            </p>
-        </div>
-        <hr>
-        <div class="post-preview">
-            <a href="/k-nearest-neighbor-from-scratch-in-python.html" rel="bookmark" title="Permalink to K-Nearest Neighbor from Scratch in Python">
-                <h2 class="post-title">
-                    K-Nearest Neighbor from Scratch in Python
-                </h2>
-            </a>
-                <p>We are going to implement K-nearest neighbor(or k-NN for short) classifier from scratch in Python. k-NN is probably the ...
-            <p class="post-meta">Posted by
-                    <a href="/author/kenzo-takahashi.html">Kenzo Takahashi</a>
-                 on Wed 06 January 2016
-            </p>
-        </div>
-        <hr>
+    <!-- Post Content -->
+    <article>
+        <p>I did not do anything related to the Foundation. I learned React. It's been a year since I last wrote a web app. There are so much more resources for learning React than it was back then.</p>
+<p>What my app does is it allows you to create an English sentence using GUI. The main goal of it is to teach grammar. The interface for the computer used to be just command line. So you typed everything. Now GUI is the primary way to interact with the computer. It effectively minimizes errors because only valid actions are available on GUI.</p>
+<p>If we can do the same thing with English, that would be great. As long as you use the app, you won't make grammatical mistakes. But there is a catch: Unlike programming languages, English grammar is not well defined. So you can't express every possible English sentence using the app. I actually came up with this idea a while ago, but I gave up because of this reason. But now I think it doesn't have to be able to express every possible English sentence to be useful. It only has to be able to express a subset of English because this is just a learning tool. You are not going to use it for everyday writing. It would be much slower to write English than typing anyway.</p>
+<p>I always wanted to build a grammar checker, but it is too hard to do it even with machine learning. Even if you could, it wouldn't be very useful for learning grammar. After proofreading hundreds of student essays, I realized that what we need to do is not fix what's already written, but prevent errors in the first place.</p>
+<p>MS Word and Google Doc both have a basic spell &amp; grammar checker. They are great for someone who already knows how to write English. It can catch subject-verb agreement, for example. But when I proofread something my students wrote, I often have to rewrite the whole sentence because it's too messed up.</p>
+<p>It's rather hard to describe what my app does using just words. I hope I can build a prototype soon. It's going to be the most complex app I've ever built.</p>
+    </article>
 
-    <!-- Pager -->
-    <ul class="pager">
-        <li class="next">
-                <a href="/author/kenzo-takahashi.html">Newest Posts &rarr;</a>
-        </li>
-    </ul>
-    Page 2 / 2
     <hr>
+
             </div>
         </div>
     </div>
